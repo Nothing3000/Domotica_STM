@@ -48,6 +48,7 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "blinkyDemo.h"
 #include "stm32f0xx_hal.h"
 #include "cmsis_os.h"
 
@@ -114,6 +115,14 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+
+  xTaskCreate( blinkyDemoTask,
+		  	  (char *) "blinkyDemo",
+			  configMINIMAL_STACK_SIZE,
+			  NULL,
+			  3,
+			  NULL
+		  );
 
   /* USER CODE END 2 */
 
@@ -332,17 +341,23 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B2_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB0 PB1 PB2 PB10 
-                           PB11 PB12 PB13 PB14 
-                           PB15 PB3 PB4 PB5 
-                           PB8 PB9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_10 
-                          |GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14 
-                          |GPIO_PIN_15|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5 
-                          |GPIO_PIN_8|GPIO_PIN_9;
+  /*Configure GPIO pins : PB0 PB1 PB2 PB11 
+                           PB12 PB13 PB14 PB15 
+                           PB3 PB4 PB5 PB8 
+                           PB9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_11 
+                          |GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15 
+                          |GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_8 
+                          |GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : XB1_Pin */
+  GPIO_InitStruct.Pin = XB1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(XB1_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PD2 */
   GPIO_InitStruct.Pin = GPIO_PIN_2;

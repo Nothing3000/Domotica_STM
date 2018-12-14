@@ -71,6 +71,8 @@
 #define LD1_GPIO_Port GPIOA
 #define B2_Pin GPIO_PIN_7
 #define B2_GPIO_Port GPIOA
+#define XB1_Pin GPIO_PIN_10
+#define XB1_GPIO_Port GPIOB
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14

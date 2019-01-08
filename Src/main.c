@@ -75,7 +75,7 @@ void StartDefaultTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-
+void blinkyDemoTask(void* parameters);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */

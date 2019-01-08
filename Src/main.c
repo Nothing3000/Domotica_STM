@@ -50,7 +50,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "blinkyDemo.h"
 #include "stm32f0xx_hal.h"
 #include "cmsis_os.h"
 
@@ -91,7 +90,7 @@ void StartDefaultTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
-
+void blinkyDemoTask(void* parameters);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/

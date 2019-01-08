@@ -6,80 +6,69 @@
  */
 
 #include <limits.h>
-#include "stm32f0xx.h"
-#include "stm32f0xx_ll_usart.h"
-#include "stm32f0xx_ll_rcc.h"
+#include "stm32f0xx_hal.h"
 #include "xbee/platform.h"
 #include "xbee/serial.h"
-#include "xbee/cbuf.h"
 
 #define XBEE_SER_CHECK(ptr)	\
 	do { if (xbee_ser_invalid(ptr)) return -EINVAL; } while (0)
 
-static xbee_cbuf_t *RXBuffer;
-
 bool_t xbee_ser_invalid( xbee_serial_t *serial)
 {
-	if(serial)
+	if(serial && (HAL_UART_GetState(serial->port) != HAL_UART_STATE_ERROR))
 	{
-		return serial->port != USART1;
+		return 0;
 	}
-	else
-	{
-		return 1;
-	}
+	return 1;
 }
 
 const char *xbee_ser_portname( xbee_serial_t *serial)
 {
-	return "USART1";
+	return "Not implemented";
 }
 
 int xbee_ser_write( xbee_serial_t *serial, const void FAR *buffer,
 	int length)
 {
+	HAL_StatusTypeDef result;
 
-	XBEE_SER_CHECK( serial);
-
-	if (length < 0)
+	XBEE_SER_CHECK(serial);
+	if(length < 0)
 	{
 		return -EINVAL;
 	}
 
-
-	for(int i = 0; i < length; i++)
+	result = HAL_UART_Transmit(serial->port, buffer, length, 1000);
+	if(result == HAL_OK || result == HAL_TIMEOUT)
 	{
-		while ( (!LL_USART_IsActiveFlag_TC(serial->port)) && (!LL_USART_IsActiveFlag_TXE(serial->port)) )
-		{
-			// do nothing
-		}
-		LL_USART_TransmitData8(serial->port,((const uint8_t FAR *)buffer)[i]);
+		return serial->port->TxXferSize - serial->port->TxXferCount;
 	}
-
-	return length;
+	else
+	{
+		return -EIO;
+	}
 }
 
 int xbee_ser_read( xbee_serial_t *serial, void FAR *buffer, int bufsize)
 {
-	int retval;
+	HAL_StatusTypeDef result;
 
-	XBEE_SER_CHECK( serial);
-
-	if (bufsize == 0)
-	{
-		return 0;
-	}
-
-	if (bufsize < 0)
+	XBEE_SER_CHECK(serial);
+	if( !buffer || bufsize < 0)
 	{
 		return -EINVAL;
+
 	}
 
-	retval = xbee_cbuf_get( RXBuffer, buffer,
-		(bufsize > 255) ? 255 : (uint8_t) bufsize);
-
-
-	return retval;
+	result = HAL_UART_Receive(serial->port, buffer, bufsize, 1000);
+	if(result == HAL_OK || result == HAL_TIMEOUT)
+	{
+		return serial->port->RxXferSize - serial->port->RxXferCount;
+	}
+	else
+	{
+		return -EIO;
+	}
 }
 
 int xbee_ser_putchar( xbee_serial_t *serial, uint8_t ch)
@@ -130,6 +119,7 @@ int xbee_ser_tx_used( xbee_serial_t *serial)
 int xbee_ser_tx_flush( xbee_serial_t *serial)
 {
 	XBEE_SER_CHECK( serial);
+	HAL_UART_AbortTransmit(serial->port);
 	return 0;
 }
 
@@ -141,70 +131,25 @@ int xbee_ser_rx_free( xbee_serial_t *serial)
 
 int xbee_ser_rx_used( xbee_serial_t *serial)
 {
-	XBEE_SER_CHECK( serial);
+	//HALP
 	return 0;
 }
 
 int xbee_ser_rx_flush( xbee_serial_t *serial)
 {
-	XBEE_SER_CHECK( serial);
+	XBEE_SER_CHECK(serial);
+	HAL_UART_AbortReceive(serial->port);
 	return 0;
 }
 
 int xbee_ser_open( xbee_serial_t *serial, uint32_t baudrate)
 {
-	XBEE_SER_CHECK( serial);
-	xbee_cbuf_init( RXBuffer, 255);
-	serial->port = USART1;
-
-	LL_USART_EnableIT_RXNE(serial->port);
-	return xbee_ser_baudrate(serial,baudrate);
-}
-
-int xbee_ser_baudrate( xbee_serial_t *serial, uint32_t baudrate)
-{
-	XBEE_SER_CHECK( serial);
-	if(baudrate != serial->baudrate)
-	{
-		serial->baudrate = baudrate;
-
-		LL_USART_Disable(serial->port);
-		LL_USART_SetBaudRate(serial->port,
-							 LL_RCC_GetUSARTClockFreq(LL_RCC_USART1_CLKSOURCE),
-							 LL_USART_GetOverSampling(serial->port),
-							 serial->baudrate);
-		LL_USART_Enable(serial->port);
-	}
-	return 0;
 
 }
 
-int xbee_ser_close( xbee_serial_t *serial)
-{
-	return 0;
-}
-
-int xbee_ser_break( xbee_serial_t *serial, bool_t enabled)
-{
-	return 0;
-}
-
-int xbee_ser_flowcontrol( xbee_serial_t *serial, bool_t enabled)
-{
-	return 0;
-}
-
-int xbee_ser_set_rts( xbee_serial_t *serial, bool_t asserted)
-{
-	return 0;
-}
-
-int xbee_ser_get_cts( xbee_serial_t *serial)
-{
-	return 1;
-}
-
-void USART1_RXInterrupt(void)
-{
-	xbee_cbuf_putch(RXBuffer, (uint8_t)USART1->RDR);
-}
+int xbee_ser_baudrate( xbee_serial_t *serial, uint32_t baudrate);
+int xbee_ser_close( xbee_serial_t *serial);
+int xbee_ser_break( xbee_serial_t *serial, bool_t enabled);
+int xbee_ser_flowcontrol( xbee_serial_t *serial, bool_t enabled);
+int xbee_ser_set_rts( xbee_serial_t *serial, bool_t asserted);
+int xbee_ser_get_cts( xbee_serial_t *serial);

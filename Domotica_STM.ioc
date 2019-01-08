@@ -1,6 +1,8 @@
 #MicroXplorer Configuration settings - do not modify
-FREERTOS.IPParameters=Tasks01
+FREERTOS.INCLUDE_uxTaskGetStackHighWaterMark=1
+FREERTOS.IPParameters=Tasks01,configCHECK_FOR_STACK_OVERFLOW,INCLUDE_uxTaskGetStackHighWaterMark
 FREERTOS.Tasks01=defaultTask,0,128,StartDefaultTask,Default,NULL
+FREERTOS.configCHECK_FOR_STACK_OVERFLOW=2
 File.Version=6
 KeepUserPlacement=true
 Mcu.Family=STM32F0
@@ -121,7 +123,7 @@ PF0-OSC_IN.Signal=RCC_OSC_IN
 PF1-OSC_OUT.Locked=true
 PF1-OSC_OUT.Signal=RCC_OSC_OUT
 PinOutPanel.RotationAngle=0
-ProjectManager.AskForMigrate=false
+ProjectManager.AskForMigrate=true
 ProjectManager.BackupPrevious=false
 ProjectManager.CompilerOptimize=6
 ProjectManager.ComputerToolchain=false
@@ -147,7 +149,7 @@ ProjectManager.StackSize=0x400
 ProjectManager.TargetToolchain=SW4STM32
 ProjectManager.ToolChainLocation=
 ProjectManager.UnderRoot=true
-ProjectManager.functionlistsort=1-MX_GPIO_Init-GPIO-false-HAL-true,2-MX_DMA_Init-DMA-false-HAL-true,2-SystemClock_Config-RCC-false-HAL-false,3-MX_USART2_UART_Init-USART2-false-LL-true,4-MX_USART1_UART_Init-USART1-false-LL-true
+ProjectManager.functionlistsort=1-MX_GPIO_Init-GPIO-false-HAL-true,2-SystemClock_Config-RCC-false-HAL-false,3-MX_USART2_UART_Init-USART2-false-LL-true,4-MX_USART1_UART_Init-USART1-false-LL-true
 RCC.AHBFreq_Value=48000000
 RCC.APB1Freq_Value=48000000
 RCC.APB1TimFreq_Value=48000000

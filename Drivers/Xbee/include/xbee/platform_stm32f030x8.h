@@ -18,6 +18,9 @@
 
 	#define FAR
 
+	#define INTERRUPT_DISABLE __disable_irq()
+	#define INTERRUPT_ENABLE __enable_irq()
+
 	typedef uint8_t bool_t;
 
 	struct xbee_cbuf_t;

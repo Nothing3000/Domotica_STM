@@ -90,11 +90,15 @@ void StartDefaultTask(void const * argument);
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 void blinkyDemoTask(void* parameters);
+void xbeeHelloTask(void * pvParameters);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
+  {
+	  while(1);
+  }
 /* USER CODE END 0 */
 
 /**
@@ -134,6 +138,14 @@ int main(void)
 			  configMINIMAL_STACK_SIZE,
 			  NULL,
 			  3,
+			  NULL
+		  );
+
+  xTaskCreate( xbeeHelloTask,
+		  	  (char *) "XbeeHelloTest",
+			  256,
+			  NULL,
+			  2,
 			  NULL
 		  );
 

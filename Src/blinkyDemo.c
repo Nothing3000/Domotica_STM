@@ -17,6 +17,7 @@ void blinkyDemoTask(void* parameters)
 	{
 		status = HAL_GPIO_ReadPin(XB1_GPIO_Port, XB1_Pin);
 		HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, status);
+		HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, !status);
 		vTaskDelay(100);
 	}
 }

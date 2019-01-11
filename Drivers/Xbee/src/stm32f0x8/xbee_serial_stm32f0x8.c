@@ -16,6 +16,7 @@
 #define XBEE_SER_CHECK(ptr)	\
 	do { if (xbee_ser_invalid(ptr)) return -EINVAL; } while (0)
 
+static char RXBuffer_Space[XBEE_CBUF_OVERHEAD+127];
 static xbee_cbuf_t *RXBuffer;
 
 bool_t xbee_ser_invalid( xbee_serial_t *serial)
@@ -136,19 +137,19 @@ int xbee_ser_tx_flush( xbee_serial_t *serial)
 int xbee_ser_rx_free( xbee_serial_t *serial)
 {
 	XBEE_SER_CHECK( serial);
-	return INT_MAX;
+	return xbee_cbuf_free(RXBuffer);
 }
 
 int xbee_ser_rx_used( xbee_serial_t *serial)
 {
 	XBEE_SER_CHECK( serial);
-	return 0;
+	return xbee_cbuf_used(RXBuffer);
 }
 
 int xbee_ser_rx_flush( xbee_serial_t *serial)
 {
 	XBEE_SER_CHECK( serial);
-	return 0;
+	return xbee_cbuf_flush(RXBuffer);
 }
 
 int xbee_ser_baudrate( xbee_serial_t *serial, uint32_t baudrate)
@@ -169,7 +170,8 @@ int xbee_ser_baudrate( xbee_serial_t *serial, uint32_t baudrate)
 
 int xbee_ser_open( xbee_serial_t *serial, uint32_t baudrate)
 {
-	xbee_cbuf_init( RXBuffer, 255);
+	RXBuffer = (xbee_cbuf_t *) RXBuffer_Space;
+	xbee_cbuf_init( RXBuffer, 127);
 	serial->port = USART1;
 	serial->baudrate = 9600;
 
@@ -204,6 +206,5 @@ int xbee_ser_get_cts( xbee_serial_t *serial)
 
 void USART1_RXInterrupt(void)
 {
-	uint8_t ch = LL_USART_ReceiveData8(USART1);
-	xbee_cbuf_putch(RXBuffer, ch);
+	xbee_cbuf_putch(RXBuffer, LL_USART_ReceiveData8(USART1));
 }

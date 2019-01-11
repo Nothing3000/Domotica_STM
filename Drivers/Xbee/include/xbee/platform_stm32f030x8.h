@@ -23,7 +23,6 @@
 
 	typedef uint8_t bool_t;
 
-	struct xbee_cbuf_t;
 	typedef struct xbee_serial_t {
 		uint32_t					baudrate;
 		USART_TypeDef			*port;

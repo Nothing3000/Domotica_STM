@@ -17,9 +17,13 @@
 	#define _f_memset		memset
 
 	#define FAR
+	#define PACKED_STRUCT struct __attribute__ ((__packed__))
 
 	#define INTERRUPT_DISABLE __disable_irq()
 	#define INTERRUPT_ENABLE __enable_irq()
+
+	#define XBEE_WIFI_ENABLED 0
+	#define XBEE_CELLULAR_ENABLED 0
 
 	typedef uint8_t bool_t;
 

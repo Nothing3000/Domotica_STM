@@ -149,7 +149,8 @@ int xbee_ser_rx_used( xbee_serial_t *serial)
 int xbee_ser_rx_flush( xbee_serial_t *serial)
 {
 	XBEE_SER_CHECK( serial);
-	return xbee_cbuf_flush(RXBuffer);
+	xbee_cbuf_flush(RXBuffer);
+	return 0;
 }
 
 int xbee_ser_baudrate( xbee_serial_t *serial, uint32_t baudrate)

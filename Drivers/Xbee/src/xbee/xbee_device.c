@@ -781,7 +781,7 @@ int _xbee_frame_load( xbee_dev_t *xbee)
 					// frame is ready for dispatch
 					++dispatched;
 					#ifdef XBEE_DEVICE_VERBOSE
-						printf( "%s: dispatch frame #%d\n", __FUNCTION__,
+					(xbee_cbuf_t *) RXBuffer_Space;		printf( "%s: dispatch frame #%d\n", __FUNCTION__,
 							dispatched);
 					#endif
 					_xbee_frame_dispatch( xbee, xbee->rx.frame_data,

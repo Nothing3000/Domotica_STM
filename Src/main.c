@@ -90,11 +90,15 @@ void StartDefaultTask(void const * argument);
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 void blinkyDemoTask(void* parameters);
+void xbeeHelloTask(void * pvParameters);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char *pcTaskName )
+  {
+	  while(1);
+  }
 /* USER CODE END 0 */
 
 /**
@@ -134,6 +138,14 @@ int main(void)
 			  configMINIMAL_STACK_SIZE,
 			  NULL,
 			  3,
+			  NULL
+		  );
+
+  xTaskCreate( xbeeHelloTask,
+		  	  (char *) "XbeeHelloTest",
+			  256,
+			  NULL,
+			  2,
 			  NULL
 		  );
 
@@ -245,26 +257,26 @@ static void MX_USART1_UART_Init(void)
   /* Peripheral clock enable */
   LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_USART1);
   
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
+  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
   /**USART1 GPIO Configuration  
-  PB6   ------> USART1_TX
-  PB7   ------> USART1_RX 
+  PA9   ------> USART1_TX
+  PA10   ------> USART1_RX 
   */
-  GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_9;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  GPIO_InitStruct.Alternate = LL_GPIO_AF_0;
-  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  GPIO_InitStruct.Alternate = LL_GPIO_AF_1;
+  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  GPIO_InitStruct.Pin = LL_GPIO_PIN_7;
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_10;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
   GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  GPIO_InitStruct.Alternate = LL_GPIO_AF_0;
-  LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  GPIO_InitStruct.Alternate = LL_GPIO_AF_1;
+  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USART1 interrupt Init */
   NVIC_SetPriority(USART1_IRQn, 3);
@@ -390,11 +402,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PA0 PA1 PA4 PA8 
-                           PA9 PA10 PA11 PA12 
-                           PA15 */
+                           PA11 PA12 PA15 */
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_4|GPIO_PIN_8 
-                          |GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11|GPIO_PIN_12 
-                          |GPIO_PIN_15;
+                          |GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -420,12 +430,12 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PB0 PB1 PB2 PB11 
                            PB12 PB13 PB14 PB15 
-                           PB3 PB4 PB5 PB8 
-                           PB9 */
+                           PB3 PB4 PB5 PB6 
+                           PB7 PB8 PB9 */
   GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_11 
                           |GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15 
-                          |GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_8 
-                          |GPIO_PIN_9;
+                          |GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6 
+                          |GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);

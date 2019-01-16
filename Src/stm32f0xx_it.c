@@ -82,8 +82,6 @@ extern TIM_HandleTypeDef htim6;
 /*           Cortex-M0 Processor Interruption and Exception Handlers          */ 
 /******************************************************************************/
 
-
-
 /******************************************************************************/
 /* STM32F0xx Peripheral Interrupt Handlers                                    */
 /* Add here the Interrupt Handlers for the used peripherals.                  */

@@ -1215,7 +1215,7 @@ void _sxa_set_cache_status(sxa_node_t FAR * sxa,
    	c->flags = flags;
    }
 
-	group = _sxa_cache_group_by_id(cache_group);
+   group = _sxa_cache_group_by_id(cache_group);
    if (group)
 		*(sxa_cache_flags_t FAR *)SXA_OFFSET(sxa, group->flags_offs) = flags;
 }

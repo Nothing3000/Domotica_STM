@@ -10,6 +10,7 @@
 #include "xbee/byteorder.h"
 
 wpan_envelope_t buttonEnvelope;
+static uint8_t payload = 0x03;
 
 
 static void sendButtonMessage()
@@ -23,7 +24,7 @@ void setButtonEnvelope(uint16_t network_addr,uint8_t dest_endpoint)
 	buttonEnvelope.dest_endpoint = dest_endpoint;
 	buttonEnvelope.source_endpoint = 0xE8;
 	buttonEnvelope.profile_id = WPAN_PROFILE_DIGI;
-	buttonEnvelope.payload = "T";
+	buttonEnvelope.payload = (void *)&payload;
 	buttonEnvelope.length = 1;
 }
 

@@ -11,8 +11,8 @@
 
 static wpan_envelope_t buttonEnvelope;
 static const uint8_t payload = 0x03;
-__attribute__((__section__(".user_data"),aligned(4))) static const uint8_t userData[1024];
-static buttonData_t *buttonData = (buttonData_t *)&userData[0];
+static volatile const __attribute__((__section__(".user_data")))  uint8_t userData[1024];
+static const buttonData_t *buttonData = (buttonData_t *)&userData[0];
 
 static void sendButtonMessage()
 {
@@ -88,7 +88,7 @@ void pollButonTask(void * pvParameters)
 {
 	GPIO_PinState currentState = HAL_GPIO_ReadPin(B2_GPIO_Port, B2_Pin);
 	GPIO_PinState previousState = currentState;
-
+	setButtonEnvelope();
 	for(;;)
 	{
 		currentState = HAL_GPIO_ReadPin(B2_GPIO_Port, B2_Pin);

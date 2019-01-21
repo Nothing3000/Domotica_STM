@@ -14,11 +14,16 @@
 #include "wpan/aps.h"
 #include "zigbee/zcl.h"
 
+/*
+ * A cluster table is required.
+ */
 wpan_cluster_table_entry_t zcl_cluster_table[] =
 {
 	WPAN_CLUST_ENTRY_LIST_END
 };
-
+/*
+ * List of endpoints with handler functions.
+ */
 wpan_endpoint_table_entry_t endpoints[] =
 {
 	{
@@ -61,6 +66,9 @@ wpan_endpoint_table_entry_t endpoints[] =
 	WPAN_ENDPOINT_TABLE_END
 };
 
+/*
+ * Frame handler table with predefined frame handlers
+ */
 const xbee_dispatch_table_entry_t xbee_frame_handlers[] =
 	{
 		XBEE_FRAME_HANDLE_LOCAL_AT,

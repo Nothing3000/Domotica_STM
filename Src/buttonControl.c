@@ -28,6 +28,9 @@ void setButtonEnvelope(uint16_t network_addr,uint8_t dest_endpoint)
 	buttonEnvelope.length = 1;
 }
 
+/*
+ * Endpoint handler for changing button settings.
+ */
 int buttonEndpoint(const wpan_envelope_t *envelope, struct wpan_ep_state_t *ep_state)
 {
 	const buttonData_t *buttonData;
@@ -44,6 +47,9 @@ int buttonEndpoint(const wpan_envelope_t *envelope, struct wpan_ep_state_t *ep_s
 	return 0;
 }
 
+/*
+ * Task for checking the button.
+ */
 void pollButonTask(void * pvParameters)
 {
 	GPIO_PinState currentState = HAL_GPIO_ReadPin(B2_GPIO_Port, B2_Pin);

@@ -11,6 +11,9 @@
 #include "stm32f0xx_hal.h"
 #include "cmsis_os.h"
 
+/*
+ * Light endpoint handler.
+ */
 int lightEndpoint(const wpan_envelope_t *envelope, struct wpan_ep_state_t *ep_state)
 {
 	const lightState_t *state;

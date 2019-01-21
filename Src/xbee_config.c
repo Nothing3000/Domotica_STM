@@ -1,19 +1,18 @@
 /*
- * XbeeHello.c
+ * xbee_config.c
  *
  *  Created on: 8 jan. 2019
  *      Author: Marlon
  */
 
-#include "cmsis_os.h"
 #include "xbee.h"
+#include "cmsis_os.h"
+
 #include "xbee/device.h"
 #include "xbee/atcmd.h"
 #include "xbee/wpan.h"
 #include "wpan/aps.h"
 #include "zigbee/zcl.h"
-
-//xbee_dev_t my_xbee;
 
 wpan_cluster_table_entry_t zcl_cluster_table[] =
 {
@@ -32,18 +31,27 @@ wpan_endpoint_table_entry_t endpoints[] =
 		zcl_cluster_table
 	},
 	{
-		0x2,
+		LIGHT_RED_ENDPOINT,
 		WPAN_PROFILE_DIGI,
-		toggleGreen,
+		lightEndpoint,
 		NULL,
 		0x0000,
 		0x00,
 		zcl_cluster_table
 	},
 	{
-		0x3,
+		LIGHT_GREEN_ENDPOINT,
 		WPAN_PROFILE_DIGI,
-		toggleRed,
+		lightEndpoint,
+		NULL,
+		0x0000,
+		0x00,
+		zcl_cluster_table
+	},
+	{
+		BUTTON_ENDPOINT,
+		WPAN_PROFILE_DIGI,
+		buttonEndpoint,
 		NULL,
 		0x0000,
 		0x00,
@@ -66,8 +74,6 @@ void xbeeConfigTask(void * pvParameters)
 	xbee_dev_init( &my_xbee, &XBEE_SERPORT, NULL, NULL);
 	xbee_dev_flowcontrol( &my_xbee, 0);
 	xbee_wpan_init(&my_xbee, endpoints);
-
-	setButtonEnvelope(0xAE5E,0x03);
 
 	xTaskCreate( pollButonTask,
 			    (char *) "pollButonTask",

@@ -7,8 +7,10 @@
 
 #include "xbee/wpan.h"
 #include "wpan/aps.h"
+#include "xbee/byteorder.h"
 
 wpan_envelope_t buttonEnvelope;
+static uint8_t payload = 0x03;
 
 
 static void sendButtonMessage()
@@ -22,10 +24,25 @@ void setButtonEnvelope(uint16_t network_addr,uint8_t dest_endpoint)
 	buttonEnvelope.dest_endpoint = dest_endpoint;
 	buttonEnvelope.source_endpoint = 0xE8;
 	buttonEnvelope.profile_id = WPAN_PROFILE_DIGI;
-	buttonEnvelope.payload = "T";
+	buttonEnvelope.payload = (void *)&payload;
 	buttonEnvelope.length = 1;
 }
 
+int buttonEndpoint(const wpan_envelope_t *envelope, struct wpan_ep_state_t *ep_state)
+{
+	const buttonData_t *buttonData;
+	uint16_t length = envelope->length;
+
+	if(length != sizeof(buttonData_t))
+	{
+		return -1;
+	}
+
+	buttonData = envelope->payload;
+
+	setButtonEnvelope(be16toh(buttonData->network_addr),buttonData->dest_endpoint);
+	return 0;
+}
 
 void pollButonTask(void * pvParameters)
 {

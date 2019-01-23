@@ -32,8 +32,6 @@ typedef PACKED_STRUCT
 int lightEndpoint(const wpan_envelope_t *, struct wpan_ep_state_t *);
 int buttonEndpoint(const wpan_envelope_t *, struct wpan_ep_state_t *);
 
-void setButtonEnvelope(uint16_t,uint8_t);
-
 void xbeeConfigTask(void *);
 void pollButonTask(void *);
 

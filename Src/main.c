@@ -133,7 +133,7 @@ int main(void)
 
   xTaskCreate( xbeeConfigTask,
 		  	  (char *) "XbeeConfig",
-			  256,
+			  configMINIMAL_STACK_SIZE,
 			  NULL,
 			  2,
 			  NULL

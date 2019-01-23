@@ -79,6 +79,7 @@ const xbee_dispatch_table_entry_t xbee_frame_handlers[] =
 void xbeeConfigTask(void * pvParameters)
 {
 	xbee_serial_t XBEE_SERPORT;
+	vTaskDelay(5000);
 	xbee_dev_init( &my_xbee, &XBEE_SERPORT, NULL, NULL);
 	xbee_dev_flowcontrol( &my_xbee, 0);
 	xbee_wpan_init(&my_xbee, endpoints);
